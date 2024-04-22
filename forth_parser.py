@@ -10,7 +10,11 @@ class ForthLexer:
         'SUB',
         'MUL',
         'DIV',
-        'EQUALS'
+        'EQUALS',
+        'FUNCTION',
+        'CHAR',
+        'DUP',
+        'EMIT'
     )
 
     t_PLUS = r'\+'
@@ -19,6 +23,10 @@ class ForthLexer:
     t_MUL = r'\*'
     t_DIV = r'\/'
     t_EQUALS = r'\='
+    t_FUNCTION=r'^\:\s[A-Za-z]+\s\(\s[A-Za-z]+\s[A-Za-z]\s--\s[A-Za-z]+\s\)\s(.+)\;$'
+    t_CHAR=r'^CHAR\s[A-Za-z]$'
+    t_DUP=r'DUP'
+    t_EMIT=r'EMIT'
 
     def t_NUMBER(self, t):
         r'\d+'
