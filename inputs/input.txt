@@ -1,0 +1,6 @@
+: AVERAGE ( a b -- avg ) + 2/ ;
+1 2 AVERAGE .
+: SUM ( a b -- sum ) + ;
+1 2 SUM .
+: TOFU ." Yummy bean curd!" ;
+TOFU

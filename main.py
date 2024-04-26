@@ -11,9 +11,11 @@ def main():
     for line in lines:
         data = line.strip()
         text = forth_lexer.test(data)
-        forth_grammar.create_grammar(forth_lexer, text)
+        forthGrammar = forth_grammar.ForthGrammar()
+        values = forth_grammar.create_grammar(forth_lexer, text, forthGrammar)
+        for value in values:
+            print(value)
+
 
 if __name__ == "__main__":
     main()
-
-

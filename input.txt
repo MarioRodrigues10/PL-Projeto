@@ -1,4 +1,0 @@
-: AVERAGE ( a b -- avg ) + 2/ ;
-: SUM ( a b -- sum ) + ;
-CHAR W
-1 2 + 
