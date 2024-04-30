@@ -1,4 +1,2 @@
-: TESTKEY ( -- )
- ." Hit a key: " KEY CR
- ." That = " . CR
-;
+: AVERAGE ( a b -- avg ) + 2/ ;
+1 2 AVERAGE .

@@ -2,48 +2,72 @@ import ply.lex as lex
 
 
 class ForthLexer:
-    # List of token names
     tokens = (
         'NUMBER',
-        'PLUS',
-        'POP',
+        'ADD',
         'SUB',
         'MUL',
         'DIV',
-        'EQUALS',
-        'FUNCTION',
-        'CHAR',
+        'L_PAREN',
+        'R_PAREN',
         'DUP',
+        'DROP',
+        'SWAP',
+        'OVER',
+        'COLON',
+        'POP',
+        'WORD',
+        'FUNCTION',
+        'EMIT',
         'CR',
         'SPACE',
         'NSPACES',
-        'EMIT',
-        'WORD'
+        'CHAR',
+        'ENDLINE',
+        'COMMENT'
     )
 
-    t_PLUS = r'\+'
-    t_POP = r'\.'
+    t_ADD = r'\+'
     t_SUB = r'\-'
     t_MUL = r'\*'
     t_DIV = r'\/'
-    t_EQUALS = r'\='
-    t_CHAR = r'CHAR\s.'
+    t_L_PAREN = r'\('
+    t_R_PAREN = r'\)'
     t_DUP = r'DUP'
+    t_DROP = r'DROP'
+    t_SWAP = r'SWAP'
+    t_OVER = r'OVER'
+    t_COLON = r'\:'
+    t_ENDLINE = r'\;'
+    t_POP = r'\.'
     t_EMIT = r'EMIT'
     t_CR = r'CR'
     t_SPACE = r'SPACE'
     t_NSPACES = r'SPACES \d+'
 
-    def t_WORD(self, t):
-        r'(?!(?:\bEMIT\b|\bCHAR\b|\bDUP\b))[A-Za-z]+'
+    def t_COMMENT(self, t):
+        r'--'
         return t
-    states = (
-        ('funcname', 'exclusive'),
-    )
 
     def t_NUMBER(self, t):
         r'\d+'
         t.value = int(t.value)
+        return t
+
+    def t_WORD(self, t):
+        r'[A-Za-z\-]+'
+        return t
+
+    states = (
+        ('funcname', 'exclusive'),
+    )
+
+    def t_funcname_LPAREN(self, t):
+        r'\('
+        return t
+
+    def t_funcname_RPAREN(self, t):
+        r'\)'
         return t
 
     def t_FUNCTION(self, t):
@@ -56,37 +80,24 @@ class ForthLexer:
         t.lexer.begin('INITIAL')
         return t
 
-    def t_funcname_LPAREN(self, t):
-        r'\('
-        return t
-
-    def t_funcname_RPAREN(self, t):
-        r'\)'
-        return t
-
     def t_funcname_CODE(self, t):
         r'--'
         return t
 
-    def t_funcname_SEMICOLON(self, t):
-        r';'
-        return t
-
     def t_funcname_WORD(self, t):
         r'\".\"'
-        return t
+        return
 
-    t_ignore = ' \t\n'
-
-    # Error handling rule
-    def t_error(self, t):
-        # print("Illegal character '%s'" % t.value[0])
-        t.lexer.skip(1)
+    t_funcname_ignore = ' \t'
 
     def t_funcname_error(self, t):
         t.lexer.skip(1)
 
-    t_funcname_ignore = ' \t\n'
+    t_ignore = ' \t'
+
+    def t_error(self, t):
+        print("Illegal character '%s'" % t.value[0])
+        t.lexer.skip(1)
 
     def build(self, **kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
@@ -100,3 +111,7 @@ class ForthLexer:
                 break
             list_toks.append(tok)
         return list_toks
+
+
+# analisdor léxico -> para identificar os tokens
+# analisador sintático -> para identificar a estrutura do código

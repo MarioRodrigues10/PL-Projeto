@@ -1,4 +1,4 @@
-import forth_parser
+import forth_lexer
 
 reservedFunctions = {}
 reservedWords = {}
@@ -32,18 +32,11 @@ class ForthGrammar:
 
     def forth_function(self, value):
         operations = []
-        name = ""
         for i in value:
-            if i.type == 'FUNCTION':
-                name = i.value
-            else:
-                operations.append(create_grammar(
-                    forth_parser.ForthLexer(), [i], self))
+            value = create_grammar(forth_lexer.ForthLexer(), [i], self)
+            operations.append(value)
         operations = [item for sublist in operations for item in sublist]
-        operations = operations[2:]
-        self.reservedFunctions = self.reservedFunctions.update(
-            {name: operations})
-        return {name: operations}
+        return operations
 
     def forth_string(self, value):
         string = ""
@@ -80,8 +73,15 @@ def create_grammar(forth_lexer, text, forthGrammar=ForthGrammar()):
     if (len(text) == 0):
         return values
     if text[0].type == 'FUNCTION' and len(text) > 1 and text[1].type != 'POP':
+        function_name = text[0].value
+        r_paren_pos = -1
+        for i in range(len(text)):
+            if text[i].type == 'R_PAREN':
+                r_paren_pos = i
+                break
+        text = text[r_paren_pos+1:]
         value = forthGrammar.forth_function(text)
-        reservedFunctions.update(value)
+        reservedFunctions.update({function_name: value})
     elif text[0].type == 'FUNCTION' and len(text) > 1 and text[1].type == 'POP':
         value = forthGrammar.forth_string(text)
         reservedWords.update(value)
@@ -99,7 +99,7 @@ def create_grammar(forth_lexer, text, forthGrammar=ForthGrammar()):
                     value = reservedWords.get(i.value)
                     string = f'pushs "{value}"'
                     values.append(string)
-            elif i.type == 'PLUS':
+            elif i.type == 'ADD':
                 value = forthGrammar.forth_add()
                 values.append(value)
             elif i.type == 'POP':
@@ -124,11 +124,6 @@ def create_grammar(forth_lexer, text, forthGrammar=ForthGrammar()):
                 i.value = i.value[5:]
                 value = forthGrammar.forth_char(i.value)
                 values.append(value)
-            elif i.type == 'SPECIAL_FUNCTION':
-                valuesdefault = i.value.split()
-                for j in valuesdefault:
-                    text2 = forth_lexer.test(j)
-                    text.append(create_grammar(forth_lexer, text2))
             elif i.type == 'CR':
                 value = forthGrammar.forth_cr()
                 values.append(value)
@@ -147,3 +142,6 @@ def create_grammar(forth_lexer, text, forthGrammar=ForthGrammar()):
             else:
                 pass
     return values
+
+
+# input (forth) -> analisador léxico -> analisador sintático -> (output)
