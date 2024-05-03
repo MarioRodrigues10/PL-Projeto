@@ -1,2 +1,4 @@
 : AVERAGE ( a b -- avg ) + 2/ ;
 1 2 AVERAGE .
+: ADD ( a b -- sum) + ;
+1 2 AVERAGE ADD .

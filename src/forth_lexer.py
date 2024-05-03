@@ -24,7 +24,16 @@ class ForthLexer:
         'NSPACES',
         'CHAR',
         'ENDLINE',
-        'COMMENT'
+        'COMMENT',
+        'CHARACTER',
+        "QUOTES",
+        "SUP",
+        "INF",
+        "IF",
+        "THEN",
+        "ELSE",
+        "2DUP",
+        "LETTER",
     )
 
     t_ADD = r'\+'
@@ -33,9 +42,7 @@ class ForthLexer:
     t_DIV = r'\/'
     t_L_PAREN = r'\('
     t_R_PAREN = r'\)'
-    t_DUP = r'DUP'
     t_DROP = r'DROP'
-    t_SWAP = r'SWAP'
     t_OVER = r'OVER'
     t_COLON = r'\:'
     t_ENDLINE = r'\;'
@@ -44,6 +51,37 @@ class ForthLexer:
     t_CR = r'CR'
     t_SPACE = r'SPACE'
     t_NSPACES = r'SPACES \d+'
+    t_QUOTES = r'\"'
+    t_SUP = r'>'
+    t_INF = r'<'
+
+    def t_SWAP(self, t):
+        r'(SWAP|swap)'
+        return t
+
+    def t_2DUP(self, t):
+        r'2dup'
+        return t
+
+    def t_DUP(self, t):
+        r'DUP'
+        return t
+
+    def t_IF(self, t):
+        r'if'
+        return t
+
+    def t_THEN(self, t):
+        r'then'
+        return t
+
+    def t_ELSE(self, t):
+        r'else'
+        return t
+
+    def t_CHAR(self, t):
+        "CHAR ."
+        return t
 
     def t_COMMENT(self, t):
         r'--'
@@ -55,7 +93,15 @@ class ForthLexer:
         return t
 
     def t_WORD(self, t):
-        r'[A-Za-z\-]+'
+        r'(?!(?:\bEMIT\b|\bCHAR\b|\bif\b|\bthen\b|\belse\b|\bSWAP\b|\bswap\b))[A-Za-z0-9]{2,}'
+        return t
+
+    def t_LETTER(self, t):
+        r' [A-Za-z] '
+        return t
+
+    def t_CHARACTER(self, t):
+        r'[^\w;:."+\-*/()<>]'
         return t
 
     states = (
@@ -75,7 +121,7 @@ class ForthLexer:
         t.lexer.begin('funcname')
 
     def t_funcname_NAME(self, t):
-        r'[A-Za-z]+'
+        r'[A-Za-z0-9]+'
         t.type = 'FUNCTION'
         t.lexer.begin('INITIAL')
         return t
