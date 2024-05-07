@@ -3,7 +3,8 @@ import forth_syntax as forth_syntax
 import forth_lexer as forth_lex
 import utils as utils
 import sys
-   
+
+
 def main():
     forth_l = forth_lex.ForthLexer()
     forthGrammar = forth_grammar.ForthGrammar()
@@ -14,9 +15,9 @@ def main():
     for line in lines:
         data = line.strip()
         text = forth_l.test(data)
-        
+
         print("Data: ", data)
-        
+
         # print("Data: ", data)
         # print("Text: ", text)
         result = forthParser.parser.parse(data)

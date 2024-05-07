@@ -12,11 +12,12 @@ def extract_text(lines):
             new_text = extracted_text
             list.append(new_text)
             extracted_text = ""
-            
+
         else:
-            list.append(line) 
-            
+            list.append(line)
+
     return list
+
 
 def remove_enters(lines):
     new_lines = []
@@ -26,6 +27,7 @@ def remove_enters(lines):
 
     new_lines = [line for line in new_lines if line]
     return new_lines
+
 
 def treat_inputs(lines):
     lines = extract_text(lines)
