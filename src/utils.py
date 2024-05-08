@@ -19,9 +19,11 @@ def extract_text(lines):
     return list
 
 
-def remove_enters(lines):
+def remove_enters_comentaries(lines):
     new_lines = []
     for line in lines:
+        if line.startswith("\\"):
+            continue
         new_line = line.replace("\n", "")
         new_lines.append(new_line)
 
@@ -31,5 +33,5 @@ def remove_enters(lines):
 
 def treat_inputs(lines):
     lines = extract_text(lines)
-    lines = remove_enters(lines)
+    lines = remove_enters_comentaries(lines)
     return lines
