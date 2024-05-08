@@ -16,8 +16,6 @@ def main():
         data = line.strip()
         text = forth_l.test(data)
 
-        print("Data: ", data)
-
         # print("Data: ", data)
         # print("Text: ", text)
         result = forthParser.parser.parse(data)
