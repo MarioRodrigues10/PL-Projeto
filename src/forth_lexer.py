@@ -34,7 +34,7 @@ class ForthLexer:
         "ELSE",
         "2DUP",
         "LETTER",
-    )
+     )
 
     t_ADD = r'\+'
     t_SUB = r'\-'
@@ -47,13 +47,16 @@ class ForthLexer:
     t_COLON = r'\:'
     t_ENDLINE = r'\;'
     t_POP = r'\.'
-    t_EMIT = r'EMIT'
     t_CR = r'CR'
     t_SPACE = r'SPACE'
     t_NSPACES = r'SPACES \d+'
     t_QUOTES = r'\"'
     t_SUP = r'>'
     t_INF = r'<'
+
+    def t_EMIT(self, t):
+        r'EMIT'
+        return t
 
     def t_SWAP(self, t):
         r'(SWAP|swap)'

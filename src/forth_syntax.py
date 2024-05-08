@@ -33,7 +33,7 @@ class ForthSyntax:
             'THEN',
             'ELSE',
             '2DUP',
-            'LETTER'
+            'LETTER',
         )
         self.parser = yacc.yacc(module=self)
         self.forth_state = state.ForthState()
@@ -113,7 +113,8 @@ class ForthSyntax:
         """
         char_op : EMIT
                 | POP
-                | DUP 
+                | DUP
+                | CHARACTER 
                 | char_op EMIT
                 | char_op POP
                 | char_op DUP

@@ -1,1 +1,2 @@
 : STAR 42 EMIT ;
+STAR

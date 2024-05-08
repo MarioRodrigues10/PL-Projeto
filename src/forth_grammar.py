@@ -130,8 +130,7 @@ def create_grammar(forth_lexer, text, forthGrammar=ForthGrammar()):
                 case 'DIV':
                     value = forthGrammar.forth_div()
                     values.append(value)
-                case 'CHAR':
-                    i.value = i.value[5:]
+                case 'CHARACTER':
                     value = forthGrammar.forth_char(i.value)
                     values.append(value)
                 case 'CR':
