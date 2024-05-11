@@ -1,0 +1,4 @@
+: maior2 2dup > if swap then 2dup > if swap then ;
+: maiorK 2dup > if swap then ;
+2 11 maior2
+4 5 maiorK

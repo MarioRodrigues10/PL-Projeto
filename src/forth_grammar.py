@@ -7,6 +7,7 @@ reservedWords = {}
 class ForthGrammar:
     def __init__(self) -> None:
         self.reservedFunctions = {}
+        self.ifN = 0
         pass
 
     def forth_push(self, value):
@@ -72,8 +73,9 @@ class ForthGrammar:
 
 
 def create_grammar(forth_lexer, text, forthGrammar=ForthGrammar()):
+   
     values = []
-    if_statement = False
+    if_statement_level = 0
     if len(text) == 0:
         return values
     if text[0].type == 'FUNCTION' and len(text) > 1 and text[1].type != 'POP':
@@ -84,16 +86,21 @@ def create_grammar(forth_lexer, text, forthGrammar=ForthGrammar()):
                 r_paren_pos = i
                 break
             elif text[i].type == 'IF':
-                if_statement = True
+                if_statement_level += 1
+
         text = text[r_paren_pos+1:]
         value = forthGrammar.forth_function(text)
-        if if_statement:
+        if if_statement_level:
             pos = 0
-            value.append('endif0:')
-            while value[pos] != 'jz endif0':
+            value.append(f'endif{forthGrammar.ifN}:')
+            while value[pos] != f'jz endif{forthGrammar.ifN}':
                 value.append(value[pos])
                 pos += 1
+            forthGrammar.ifN += 1
+            if_statement_level -= 1
         reservedFunctions.update({function_name: value})
+
+
     elif text[0].type == 'FUNCTION' and len(text) > 1 and text[1].type == 'POP':
         value = forthGrammar.forth_string(text)
         reservedWords.update(value)
@@ -161,7 +168,7 @@ def create_grammar(forth_lexer, text, forthGrammar=ForthGrammar()):
                 case 'SUP':
                     values.append("sup")
                 case 'IF':
-                    values.append("jz endif0")
+                    values.append(f'jz endif{forthGrammar.ifN}')
                 case _:
                     pass
     return values
